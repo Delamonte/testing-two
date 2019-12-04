@@ -1,96 +1,162 @@
-from tkinter import*
+#!/usr/bin/env python3
+# Filename: pycalc.py
 
-me=Tk()
-me.geometry("354x460")
-me.title("CALCULATOR")
-melabel = Label(me,text="CALCULATOR",bg='White',font=("Times",30,'bold'))
-melabel.pack(side=TOP)
-me.config(background='Dark gray')
 
-textin=StringVar()
-operator=""
+# Import QApplication and the required widgets from PyQt5.QtWidgets
 
-def clickbut(number):   #lambda:clickbut(1)
-     global operator
-     operator=operator+str(number)
-     textin.set(operator)
+import sys
 
-def equlbut():
-     global operator
-     add=str(eval(operator))
-     textin.set(add)
-     operator=''
-def equlbut():
-     global operator
-     sub=str(eval(operator))
-     textin.set(sub)
-     operator=''     
-def equlbut():
-     global operator
-     mul=str(eval(operator))
-     textin.set(mul)
-     operator=''
-def equlbut():
-     global operator
-     div=str(eval(operator))
-     textin.set(div)
-     operator=''    
+from functools import partial
 
-def clrbut():
-     textin.set('')
 
-     
-metext=Entry(me,font=("Courier New",12,'bold'),textvar=textin,width=25,bd=5,bg='powder blue')
-metext.pack()
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 
-but1=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(1),text="1",font=("Courier New",16,'bold'))
-but1.place(x=10,y=100)
+__version__ = '0.4'
+__author__ = 'Deniel Delamonte'
 
-but2=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(2),text="2",font=("Courier New",16,'bold'))
-but2.place(x=10,y=170)
+ERROR_MSG = "ERROR"
 
-but3=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(3),text="3",font=("Courier New",16,'bold'))
-but3.place(x=10,y=240)
+# Создаем суб клас для гуи окна
+class PyCalcUi(QMainWindow):
+    """Гуи"""
+    def __init__(self):
+       
+        super().__init__()
+        # параметры главного окна
+        self.setWindowTitle("PyCalc")
+        self.setFixedSize(235, 235)
+        # центраьный виджет
+        self.generalLayout = QVBoxLayout()
+        self._centralWidget = QWidget(self)
+        self.setCentralWidget(self._centralWidget)
+        self._centralWidget.setLayout(self.generalLayout)
+        #Тут кнопки и дисплей
+        self._createDisplay()
+        self._createButtons()
+	
+    def _createDisplay(self):
+        """Создаем дисплей."""
+        # Дисплейный виджет
+        self.display = QLineEdit()
+        # Немного параметров
+        self.display.setFixedHeight(35)
+        self.display.setAlignment(Qt.AlignRight)
+        self.display.setReadOnly(True)
+        # Добавляем его в разметку.
+        self.generalLayout.addWidget(self.display)
 
-but4=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(4),text="4",font=("Courier New",16,'bold'))
-but4.place(x=75,y=100)
+    def _createButtons(self):
+        """Кнопочки"""
+        self.buttons = {}
+        buttonsLayout = QGridLayout()
+        # кнопка | положение в сетке
+        buttons = {'7': (0, 0),
+                   '8': (0, 1),
+                   '9': (0, 2),
+                   '/': (0, 3),
+                   'C': (0, 4),
+                   '4': (1, 0),
+                   '5': (1, 1),
+                   '6': (1, 2),
+                   '*': (1, 3),
+                   '(': (1, 4),
+                   '1': (2, 0),
+                   '2': (2, 1),
+                   '3': (2, 2),
+                   '-': (2, 3),
+                   ')': (2, 4),
+                   '0': (3, 0),
+                   '00': (3, 1),
+                   '.': (3, 2),
+                   '+': (3, 3),
+                   '=': (3, 4),
+                  }
+        # содаем кнопки и добавляем их в разметку
+        for btnText, pos in buttons.items():
+            self.buttons[btnText] = QPushButton(btnText)
+            self.buttons[btnText].setFixedSize(40, 40)
+            buttonsLayout.addWidget(self.buttons[btnText], pos[0], pos[1])
+            # давляем разметку кнопок в разметку основную
+            self.generalLayout.addLayout(buttonsLayout)
 
-but5=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(5),text="5",font=("Courier New",16,'bold'))
-but5.place(x=75,y=170)
+    def setDisplayText(self, text):
+        """текст дисплея."""
+        self.display.setText(text)
+        self.display.setFocus()
 
-but6=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(6),text="6",font=("Courier New",16,'bold'))
-but6.place(x=75,y=240)
+    def displayText(self):
+        """получение текста"""
+        return self.display.text()
 
-but7=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(7),text="7",font=("Courier New",16,'bold'))
-but7.place(x=140,y=100)
+    def clearDisplay(self):
+        """очистка текста"""
+        self.setDisplayText('')
 
-but8=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(8),text="8",font=("Courier New",16,'bold'))
-but8.place(x=140,y=170)
 
-but9=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(9),text="9",font=("Courier New",16,'bold'))
-but9.place(x=140,y=240)
 
-but0=Button(me,padx=14,pady=14,bd=4,bg='white',command=lambda:clickbut(0),text="0",font=("Courier New",16,'bold'))
-but0.place(x=10,y=310)
+# обработка данных
+def evaluateExpression(expression):
+    """оценка выражения."""
+    try:
+        result = str(eval(expression, {}, {}))
+    except Exception:
+        result = ERROR_MSG
 
-butdot=Button(me,padx=47,pady=14,bd=4,bg='white',command=lambda:clickbut("."),text=".",font=("Courier New",16,'bold'))
-butdot.place(x=75,y=310)
+    return result
 
-butpl=Button(me,padx=14,pady=14,bd=4,bg='white',text="+",command=lambda:clickbut("+"),font=("Courier New",16,'bold'))
-butpl.place(x=205,y=100)
+# Создание класса контролера для гуи и модели
+class PyCalcCtrl:
+    """контроллер."""
 
-butsub=Button(me,padx=14,pady=14,bd=4,bg='white',text="-",command=lambda:clickbut("-"),font=("Courier New",16,'bold'))
-butsub.place(x=205,y=170)
+    def __init__(self, model, view):
+        """Инициация контроллер."""
+        self._evaluate = model
+        self._view = view
+        # соиденение котролера и слота
+        self._connectSignals()
 
-butml=Button(me,padx=14,pady=14,bd=4,bg='white',text="*",command=lambda:clickbut("*"),font=("Courier New",16,'bold'))
-butml.place(x=205,y=240)
+    def _calculateResult(self):
+        """оценка выражения."""
+        result = self._evaluate(expression=self._view.displayText())
+        self._view.setDisplayText(result)
 
-butdiv=Button(me,padx=14,pady=14,bd=4,bg='white',text="/",command=lambda:clickbut("/"),font=("Courier New",16,'bold'))
-butdiv.place(x=205,y=310)
+    def _buildExpression(self, sub_exp):
+        """создание выражения."""
+        if self._view.displayText() == ERROR_MSG:
+            self._view.clearDisplay()
 
-butclear=Button(me,padx=14,pady=119,bd=4,bg='white',text="CE",command=clrbut,font=("Courier New",16,'bold'))
-butclear.place(x=270,y=100)
+        expression = self._view.displayText() + sub_exp
+        self._view.setDisplayText(expression)
 
-butequal=Button(me,padx=151,pady=14,bd=4,bg='white',command=equlbut,text="=",font=("Courier New",16,'bold'))
-butequal.place(x=10,y=380)
-me.mainloop()
+    def _connectSignals(self):
+        """соиденение сигналов."""
+        for btnText, btn in self._view.buttons.items():
+            if btnText not in {"=", "C"}:
+                btn.clicked.connect(partial(self._buildExpression, btnText))
+
+        self._view.buttons["="].clicked.connect(self._calculateResult)
+        self._view.display.returnPressed.connect(self._calculateResult)
+        self._view.buttons["C"].clicked.connect(self._view.clearDisplay)
+
+# Код клиента
+def main():
+    """Основные функции."""
+    pycalc = QApplication(sys.argv)
+    # показываем гуи
+    view = PyCalcUi()
+    view.show()
+    #создается инстанс модели и контроллера
+    model = evaluateExpression
+    PyCalcCtrl(model=model, view=view)
+    # И зацыкливаем его.
+    sys.exit(pycalc.exec_())
+
+if __name__ == '__main__':
+    main()
