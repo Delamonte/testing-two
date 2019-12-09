@@ -51,7 +51,14 @@ class snake(object):
         self.body.append(self.head)
         self.dirnx = 0
         self.dirny = 1
- 
+
+    def moveDir(self):
+        dirLeft = dirny(-1), dirnx(0)
+        dirRight = dirny(1), dirnx(0)
+        dirUp = dirny(0), dirnx(-1)
+        dirDown = dirny(0), dirnx(1)
+
+        pass
     def move(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -60,26 +67,29 @@ class snake(object):
             keys = pygame.key.get_pressed()
  
             for key in keys:
-                if keys[pygame.K_LEFT]:
+                if keys [pygame.K_LEFT]:
                     self.dirnx = -1
                     self.dirny = 0
                     self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
- 
-                elif keys[pygame.K_RIGHT]:
+
+
+                if keys [pygame.K_RIGHT]:
                     self.dirnx = 1
                     self.dirny = 0
                     self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
- 
-                elif keys[pygame.K_UP]:
+                    
+                if keys[pygame.K_UP]:
                     self.dirnx = 0
                     self.dirny = -1
                     self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
- 
-                elif keys[pygame.K_DOWN]:
+                    
+                if keys[pygame.K_DOWN]:
                     self.dirnx = 0
                     self.dirny = 1
                     self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+                    
  
+
         for i, c in enumerate(self.body):
             p = c.pos[:]
             if p in self.turns:
@@ -209,7 +219,6 @@ def main():
  
        
     pass
- 
  
  
 main()

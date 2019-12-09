@@ -2,8 +2,6 @@
 # Filename: pycalc.py
 
 
-# Import QApplication and the required widgets from PyQt5.QtWidgets
-
 import sys
 
 from functools import partial

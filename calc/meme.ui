@@ -92,11 +92,50 @@
    <addaction name="menu"/>
   </widget>
   <action name="action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>тут нужно обьяснение</string>
+    <string>Что я такое?</string>
+   </property>
+   <property name="toolTip">
+    <string>Я первое окошко что было создано в этой программке</string>
    </property>
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>54</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>54</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
